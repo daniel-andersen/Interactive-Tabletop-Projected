@@ -1,13 +1,17 @@
 class Example1 {
 
     constructor() {
-        window.config = new Config()
-
-        var library = new Library()
-        library.init()
+        this.library = new Library()
+        this.library.init()
     }
 
     run() {
-        console.log("Running example... 9")
+        console.log("Running example...")
+
+        this.exampleImageElement = document.getElementById('exampleImage')
+        this.library.setDebugImage(this.exampleImageElement)
+
+        let imageData = this.library.requestImageData({width: 640, height: 480})
+        console.log(imageData)
     }
 }
