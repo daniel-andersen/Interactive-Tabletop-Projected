@@ -22,6 +22,8 @@
         <script src="scripts/config.js" type="text/javascript" ></script>
         <script src="scripts/library.js" type="text/javascript" ></script>
 
+        <script src="scripts/examples/example1.js" type="text/javascript" ></script>
+
         <style>
             .fullscreen_black {
                 background: black;
@@ -41,10 +43,8 @@
 
         <script>
             window.addEventListener("DOMContentLoaded", function() {
-                window.config = new Config()
-
-                var library = new Library()
-                library.init()
+                let example = new Example1()
+                example.run()
             });
         </script>
     </body>

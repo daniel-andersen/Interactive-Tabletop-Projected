@@ -1,61 +1,65 @@
-var gulp = require('gulp')
-var del = require('del')
-var connect = require('gulp-connect')
-var livereload = require('gulp-livereload')
-var less = require('gulp-less')
-var minifyCSS = require('gulp-csso')
+const gulp = require('gulp')
+const del = require('del')
+const connect = require('gulp-connect')
+const watch = require('gulp-watch')
+const less = require('gulp-less')
+const minifyCSS = require('gulp-csso')
 
-gulp.task('webserver', function() {
-    livereload({ start: true })
-    connect.server({
+gulp.task('server', function(done) {
+    return connect.server({
         port: 9000,
         livereload: true,
         root: ['.', 'build']
     })
 })
 
+gulp.task('watch', function (done) {
+    return watch(['./app/*.html'], ['html'])
+})
+
 gulp.task('clean', function(done) {
-    del('build/**', {force:true})
-    done()
+    return del('build/**', {force:true})
 })
 
 gulp.task('css', function(done) {
-    gulp.src('./css/**/*.less')
+    return gulp.src('./css/**/*.less')
         .pipe(less())
         .pipe(minifyCSS())
         .pipe(gulp.dest('build/css'))
-        .pipe(livereload())
-    done()
+        .pipe(connect.reload())
 })
 
 gulp.task('assets', function(done) {
-    gulp.src('./assets/**/*')
+    return gulp.src('./assets/**/*')
         .pipe(gulp.dest('build/assets'))
-        .pipe(livereload())
-    done()
+        .pipe(connect.reload())
 })
 
 gulp.task('html', function(done) {
-    gulp.src('html/**/*.html')
+    return gulp.src('html/**/*.html')
         .pipe(gulp.dest('build'))
-        .pipe(livereload())
-    done()
+        .pipe(connect.reload())
 })
 
 gulp.task('lib', function(done) {
-    gulp.src('lib/**/*.js')
+    return gulp.src('lib/**/*.js')
         .pipe(gulp.dest('build/lib'))
-        .pipe(livereload())
-    done()
+        .pipe(connect.reload())
 })
 
 gulp.task('src', function(done) {
-    gulp.src('src/**/*.js')
+    return gulp.src('src/**/*.js')
         .pipe(gulp.dest('build/scripts'))
-        .pipe(livereload())
-    done()
+        .pipe(connect.reload())
 })
 
 gulp.task('default', gulp.series(['clean', 'css', 'assets', 'html', 'lib', 'src']))
 gulp.task('build', gulp.series(['default']))
-gulp.task('serve', gulp.series(['default', 'webserver']))
+
+gulp.task('watch-and-reload', function(done) {
+    return watch(['css/**', 'assets/**', 'html/**', 'lib/**', 'src/**'], function() {
+        (gulp.series('build'))()
+    })
+})
+
+gulp.task('serve', gulp.series(['build', gulp.parallel(['server', 'watch-and-reload'])]))
