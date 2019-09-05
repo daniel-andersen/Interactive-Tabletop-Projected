@@ -12,6 +12,10 @@ class Library {
         this.inputSource = this.videoElement
         this.inputSourceSize = {width: 1920, height: 1080}
 
+        this.workers = new AsyncWorkers()
+
+        this.brickDetector = new BrickDetector()
+
         console.log("Library initialized!")
     }
 
@@ -20,13 +24,24 @@ class Library {
         this.inputSourceSize = {width: this.inputSource.offsetWidth, height: this.inputSource.offsetHeight}
     }
 
-    requestImageData(size) {
-        return this.getImageData(this.inputSource, this.inputSourceSize.width, this.inputSourceSize.height, size.width, size.height)
+    getImageData(size) {
+        return this._getImageData(this.inputSource, this.inputSourceSize.width, this.inputSourceSize.height, size.width, size.height)
     }
 
-    getImageData(element, srcWidth, srcHeight, dstWidth, dstHeight) {
+    _getImageData(element, srcWidth, srcHeight, dstWidth, dstHeight) {
         this.videoCanvasContext.drawImage(element, 0, 0, srcWidth, srcHeight, 0, 0, dstWidth, dstHeight)
         let imageData = this.videoCanvasContext.getImageData(0, 0, dstWidth, dstHeight)
         return imageData
+    }
+}
+
+Library.Sizes = {
+    Original: {
+        width: 1920,
+        height: 1080
+    },
+    p480: {
+        width: 640,
+        height: 480
     }
 }

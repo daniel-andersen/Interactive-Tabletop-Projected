@@ -1,5 +1,0 @@
-class BrickDetector {
-    detectBricks(image) {
-        
-    }
-}
