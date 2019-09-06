@@ -4,13 +4,17 @@ class AsyncWorkers {
         this.maxWorkers = 100
 
         this.callbackWaitQueue = []
+
+        this.workerMap = {
+            "BrickDetector": "scripts/workers/opencv-worker.js"
+        }
     }
 
-    async invokeWorker(script, data={}, transferables=[]) {
+    async invokeWorker(meta, data={}, transferables=[]) {
 
         // Find and invoke available worker
-        let worker = await this.getWorker(script)
-        let message = await worker.invoke(data, transferables)
+        let worker = await this.getWorker(meta.class)
+        let message = await worker.invoke(meta, data, transferables)
 
         // Dequeue waiting calls
         this.dequeueCallback(worker)
@@ -29,7 +33,9 @@ class AsyncWorkers {
         callback.resolve(worker)
     }
 
-    getWorker(script) {
+    getWorker(className) {
+        let script = this.workerMap[className]
+
         return new Promise((resolve, reject) => {
 
             // Fetch first available worker

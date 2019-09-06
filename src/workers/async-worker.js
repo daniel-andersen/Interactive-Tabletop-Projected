@@ -24,13 +24,11 @@ class AsyncWorker {
         this.busy = true
     }
 
-    invoke(data={}, transferables=[]) {
+    invoke(meta, data={}, transferables=[]) {
         this.occupy()
 
         return new Promise((resolve, reject) => {
-            let meta = {
-                callerId: Util.randomId()
-            }
+            meta.callerId = Util.randomId()
 
             this.promises[meta.callerId] = {
                 resolve: resolve,

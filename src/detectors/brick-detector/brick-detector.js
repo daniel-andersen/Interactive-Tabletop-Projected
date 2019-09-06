@@ -7,7 +7,10 @@ class BrickDetector {
 
     async _detect(imageData) {
         let bricks = await window.library.workers.invokeWorker(
-            "scripts/detectors/brick-detector/brick-detector-worker.js",
+            {
+                "class": "BrickDetector",
+                "function": "detect"
+            },
             {
                 "width": imageData.width,
                 "height": imageData.height,
