@@ -5,13 +5,15 @@ importScripts("/lib/opencv/utils.js")
 importScripts("/scripts/workers/worker-util.js")
 
 importScripts("/scripts/detectors/brick-detector/brick-detector-worker.js")
+importScripts("/scripts/board-area/board-area-worker.js")
 
 cv['onRuntimeInitialized'] = () => {
     ready()
 }
 
 let classMap = {
-    "BrickDetector": BrickDetectorWorker
+    "BrickDetector": BrickDetectorWorker,
+    "BoardArea": BoardAreaWorker
 }
 
 onmessage = (message) => {

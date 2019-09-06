@@ -3,7 +3,8 @@ class BrickDetectorWorker {
         let payload = message.data.payload
         let meta = message.data.meta
 
-        let imageData = new ImageData(new Uint8ClampedArray(payload.imageDataBuffer), payload.width, payload.height)
+        let imageData = new ImageData(new Uint8ClampedArray(payload.image.buffer), payload.image.width, payload.image.height)
+
         let frame = cv.matFromImageData(imageData)
 
         let dst = new cv.Mat()
@@ -14,6 +15,8 @@ class BrickDetectorWorker {
         frame.delete()
         dst.delete()
 
-        postResponse(meta, {bricks: []})
+        postResponse(meta, {
+            "bricks": []
+        })
     }
 }

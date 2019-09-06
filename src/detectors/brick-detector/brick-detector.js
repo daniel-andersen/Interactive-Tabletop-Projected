@@ -1,23 +1,13 @@
 class BrickDetector {
-    async detect() {
+    async detect(areaId=BoardArea.Area.WholeBoard) {
         let size = Library.Sizes.p480
-        let imageData = window.library.getImageData(size)
-        return await this._detect(imageData)
+        let imageData = await window.library.boardArea.getImage(areaId)
+        let bricks = await this._detect(imageData)
+        return bricks
     }
 
     async _detect(imageData) {
-        let bricks = await window.library.workers.invokeWorker(
-            {
-                "class": "BrickDetector",
-                "function": "detect"
-            },
-            {
-                "width": imageData.width,
-                "height": imageData.height,
-                "imageDataBuffer": imageData.data.buffer
-            },
-            [imageData.data.buffer]
-        )
+        let bricks = await window.library.workers.invokeWorkerWithImage("BrickDetector", "detect", imageData)
         return bricks
     }
 }

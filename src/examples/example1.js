@@ -27,10 +27,9 @@ class Example1 {
 
         await this.prepare()
 
-        this.library.setDebugImage(this.exampleImageElement)
+        this.library.camera.setDebugImage(this.exampleImageElement)
 
-        let imageData = this.library.getImageData({width: 640, height: 480})
-        console.log(imageData)
+        let imageData = await this.library.camera.getCameraImage(Library.Sizes.p480)
 
         this.library.brickDetector.detect().then((bricks) => {
             console.log("Detected bricks 1:")

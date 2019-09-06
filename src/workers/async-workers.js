@@ -6,8 +6,32 @@ class AsyncWorkers {
         this.callbackWaitQueue = []
 
         this.workerMap = {
-            "BrickDetector": "scripts/workers/opencv-worker.js"
+            "BrickDetector": "scripts/workers/opencv-worker.js",
+            "BoardArea": "scripts/workers/opencv-worker.js"
         }
+    }
+
+    async invokeWorkerWithImage(className, functionName, imageData, data={}) {
+        let imageDataArray = new Uint8ClampedArray(imageData.width * imageData.height * 4)
+        imageDataArray.set(imageData.data)
+
+        return this.invokeWorker(
+            {
+                "class": className,
+                "function": functionName
+            },
+            Object.assign({},
+                data,
+                {
+                    "image": {
+                        "width": imageData.width,
+                        "height": imageData.height,
+                        "buffer": imageDataArray.buffer
+                    }
+                }
+            ),
+            [imageDataArray.buffer]
+        )
     }
 
     async invokeWorker(meta, data={}, transferables=[]) {
