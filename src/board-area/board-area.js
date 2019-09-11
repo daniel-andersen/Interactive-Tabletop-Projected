@@ -1,8 +1,10 @@
 class BoardArea {
-    async getImage(areaId=Area.FullBoard) {
+    async getImage(areaId=BoardArea.Area.FullBoard) {
+        await window.library.boardCalibration.waitUntilCalibrated()
+
         let cameraImageData = await window.library.camera.getCameraImage()
 
-        if (areaId === Area.CameraImage) {
+        if (areaId === BoardArea.Area.CameraImage) {
             return cameraImageData
         }
 

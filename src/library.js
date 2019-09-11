@@ -8,6 +8,7 @@ class Library {
         this.workers = new AsyncWorkers()
 
         this.camera = new Camera()
+        this.boardCalibration = new BoardCalibration()
         this.boardArea = new BoardArea()
         this.brickDetector = new BrickDetector()
 

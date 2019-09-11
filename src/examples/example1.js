@@ -13,9 +13,9 @@ class Example1 {
                 if (this.exampleImageElement.complete) {
                     resolve()
                 } else {
-                    setTimeout(() =>
+                    setTimeout(() => {
                         waitUntilReady()
-                    , 10)
+                    }, 10)
                 }
             }
             waitUntilReady()
