@@ -49,9 +49,11 @@
 
     <body class="fullscreen_black">
         <div id="content" class="fullscreen_black">
+            <img id="exampleImage" src="assets/example1/test.png" width="640px" height="480px" style="position: absolute; left: 0; top: 0; width: 640px; height: 480px; visibility: hidden;"></canvas>
+
             <video id="cvVideo" autoplay="true" style="position: absolute; left: 0; top: 0; width: 100vh; height: 100vw; visibility: hidden;"></video>
             <canvas id="cvVideoCanvas" width="1920px" height="1080px" style="position: absolute; left: 0; top: 0; visibility: hidden;"></canvas>
-            <img id="exampleImage" src="assets/example1/test.png" width="640px" height="480px" style="position: absolute; left: 0; top: 0; width: 640px; height: 480px; visibility: hidden;"></canvas>
+            <canvas id="cvDebugCanvas" width="640px" height="480px" style="position: absolute; left: 0; top: 0; visibility: hidden;"></canvas>
         </div>
 
         <script>

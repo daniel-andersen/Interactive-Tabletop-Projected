@@ -27,6 +27,10 @@ class Example1 {
 
         await this.prepare()
 
+        await this.runTest()
+    }
+
+    async runTest() {
         this.library.camera.setDebugImage(this.exampleImageElement)
 
         let imageData = await this.library.camera.getCameraImage(Library.Sizes.p480)

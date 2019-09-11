@@ -11,6 +11,8 @@ class Library {
         this.boardArea = new BoardArea()
         this.brickDetector = new BrickDetector()
 
+        this.debugCanvas = document.getElementById('cvDebugCanvas')
+
         console.log("Library initialized!")
     }
 }

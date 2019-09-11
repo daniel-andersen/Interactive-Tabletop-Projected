@@ -1,5 +1,5 @@
 class BrickDetector {
-    async detect(areaId=BoardArea.Area.WholeBoard) {
+    async detect(areaId=BoardArea.Area.FullBoard) {
         let size = Library.Sizes.p480
         let imageData = await window.library.boardArea.getImage(areaId)
         let bricks = await this._detect(imageData)
