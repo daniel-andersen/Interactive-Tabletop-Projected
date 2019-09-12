@@ -7,7 +7,8 @@ class AsyncWorkers {
 
         this.workerMap = {
             "BrickDetector": "scripts/workers/opencv-worker.js",
-            "BoardArea": "scripts/workers/opencv-worker.js"
+            "BoardArea": "scripts/workers/opencv-worker.js",
+            "BoardCalibration": "scripts/workers/opencv-worker.js"
         }
     }
 

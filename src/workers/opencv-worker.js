@@ -6,14 +6,17 @@ importScripts("/scripts/workers/worker-util.js")
 
 importScripts("/scripts/detectors/brick-detector/brick-detector-worker.js")
 importScripts("/scripts/board-area/board-area-worker.js")
+importScripts("/scripts/board-calibration/board-calibration-worker.js")
 
 cv['onRuntimeInitialized'] = () => {
+    console.log("OpenCV worker initialized!")
     ready()
 }
 
 let classMap = {
     "BrickDetector": BrickDetectorWorker,
-    "BoardArea": BoardAreaWorker
+    "BoardArea": BoardAreaWorker,
+    "BoardCalibration": BoardCalibrationWorker
 }
 
 onmessage = (message) => {
@@ -25,5 +28,3 @@ onmessage = (message) => {
         aClassInstance[meta.function](message)
     })
 }
-
-console.log("OpenCV worker initialized!")

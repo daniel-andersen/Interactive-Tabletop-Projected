@@ -1,15 +1,11 @@
 class BoardCalibration {
-    calibrated = false
-    calibrating = false
-    lastCalibrationTime = undefined
-
     calibrationCallbacks = []
 
-    calibration = {
-        topLeftCorner: new Point2i(),
-        topRightCorner: new Point2i(),
-        bottomLeftCorner: new Point2i(),
-        bottomRightCorner: new Point2i()
+    calibrationState = {
+        calibrated: false,
+        calibrating: false,
+        lastCalibrationTime: undefined,
+        calibration: undefined
     }
 
     waitUntilCalibrated() {
@@ -25,11 +21,11 @@ class BoardCalibration {
     }
 
     isCalibrated() {
-        return this.calibrated
+        return this.calibrationState.calibrated
     }
 
     needsCalibration() {
-        return !this.calibrated
+        return !this.calibrationState.calibrated
     }
 
     addCalibrationCallback(callback) {
@@ -37,23 +33,25 @@ class BoardCalibration {
     }
 
     startCalibration() {
-        if (this.calibrating) {
+        if (this.calibrationState.calibrating) {
             return
         }
 
-        this.calibrating = true
+        this.calibrationState.calibrating = true
+        this.calibrationState.calibrated = false
 
         console.log("Starting calibration...")
-        setTimeout(() => {
-            this.didCalibrate()
-        }, 2000)
+
+        this.showCalibrationImage().then(() => {
+            this.performCalibrationStep()
+        })
     }
 
     didCalibrate() {
         console.log("Finished calibration!")
 
-        this.calibrating = false
-        this.calibrated = true
+        this.calibrationState.calibrating = false
+        this.calibrationState.calibrated = true
 
         let callbacks = this.calibrationCallbacks
         this.calibrationCallbacks = []
@@ -61,5 +59,45 @@ class BoardCalibration {
         for (let callback of callbacks) {
             callback()
         }
+    }
+
+    showCalibrationImage() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve()
+            }, 1000)
+        })
+    }
+
+    hideCalibrationImage() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve()
+            }, 1000)
+        })
+    }
+
+    async performCalibrationStep() {
+        let size = Library.Sizes.p480
+        let imageData = await window.library.boardArea.getImage(BoardArea.Area.CameraImage)
+        let calibrationResult = await window.library.workers.invokeWorkerWithImage("BoardCalibration", "getBoardCalibration", imageData)
+
+        this.calibrationState.calibration = calibrationResult.calibration
+        console.log(this.calibrationState)
+
+        this.debug()
+
+        this.hideCalibrationImage().then(() => {
+            this.didCalibrate()
+        })
+    }
+
+    async debug() {
+        //let cameraImageData = await window.library.camera.getCameraImage()
+        //window.library.debugCanvas.getContext("2d").putImageData(cameraImageData, 0, 0)
+
+        let areaImageData = await window.library.boardArea.getImage()
+        window.library.debugCanvas.getContext("2d").putImageData(areaImageData, 0, 0)
+        console.log(areaImageData.width + ", " + areaImageData.height)
     }
 }

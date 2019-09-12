@@ -1,14 +1,19 @@
 class BoardArea {
     async getImage(areaId=BoardArea.Area.FullBoard) {
-        await window.library.boardCalibration.waitUntilCalibrated()
-
         let cameraImageData = await window.library.camera.getCameraImage()
-
         if (areaId === BoardArea.Area.CameraImage) {
             return cameraImageData
         }
 
-        let payload = await window.library.workers.invokeWorkerWithImage("BoardArea", "getBoardArea", cameraImageData, {"areaId": areaId})
+        await window.library.boardCalibration.waitUntilCalibrated()
+
+        let payload = await window.library.workers.invokeWorkerWithImage("BoardArea", "getBoardArea", cameraImageData, {
+            area: { // TODO!
+                topLeftCorner: { x: 0.0, y: 0.0 },
+                bottomRightCorner: { x: 1.0, y: 1.0 }
+            },
+            calibration: window.library.boardCalibration.calibrationState.calibration
+        })
 
         return WorkerUtil.getImageDataFromPayload(payload)
     }
