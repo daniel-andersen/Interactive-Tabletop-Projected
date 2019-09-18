@@ -22,7 +22,7 @@ export default class BoardCalibrationWorker {
     }
 
     findHomography(imageData) {
-        let foundPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [594, 317,   881, 166,   1110, 320,   1097, 450,   1384, 557,   595, 487,   863, 447,   959, 315,   886, 220])
+        let foundPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [595, 318,   882, 166,   1109, 322,   1099, 451,   1386, 557,   595, 487,   865, 446,   960, 315,   886, 219])
         //let foundPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [583, 389,   872, 181,   1113, 393,   1088, 543,   1336, 647,   619, 579,   868, 538,   960, 387,   878, 260])
         let calibrationPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [264, 250,   553,  41,    793, 253,    770, 403,   1016, 508,   301, 440,   549, 398,   641, 246,   559, 119])
 
@@ -59,9 +59,11 @@ export default class BoardCalibrationWorker {
     }
 
     findPerspectiveTransform(corners) {
+        let aspectRatio = 1280.0 / 800.0
+        let maxWidth = Math.max(corners.topRightCorner.x - corners.topLeftCorner.x, corners.bottomRightCorner.x - corners.bottomLeftCorner.x)
         let transformSize = {
-            width: Math.max(corners.topRightCorner.x - corners.topLeftCorner.x, corners.bottomRightCorner.x - corners.bottomLeftCorner.x),
-            height: Math.max(corners.bottomLeftCorner.y - corners.topLeftCorner.y, corners.bottomRightCorner.y - corners.topRightCorner.y)
+            width: maxWidth,
+            height: maxWidth / aspectRatio
         }
 
         let sourceCorners = cv.matFromArray(4, 1, cv.CV_32FC2, [

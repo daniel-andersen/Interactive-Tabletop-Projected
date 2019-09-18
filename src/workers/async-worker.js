@@ -53,7 +53,7 @@ export default class AsyncWorker {
         if (message.data.type !== undefined && message.data.type === "RPC") {
             return
         }
-        console.log(message)
+
         this.busy = false
 
         let resolve = this.promises[message.data.meta.callerId].resolve

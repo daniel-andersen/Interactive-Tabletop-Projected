@@ -1,5 +1,6 @@
 import Library from '../library'
 import BoardArea from '../board-area/board-area'
+import Util from '../util/util'
 
 export default class BoardCalibration {
     constructor() {
@@ -88,6 +89,7 @@ export default class BoardCalibration {
         let calibrationResult = await window.library.workers.invokeWorkerWithImage("BoardCalibration", "getBoardCalibration", imageData)
 
         this.calibrationState.calibration = calibrationResult.calibration
+        this.calibrationState.lastCalibrationTime = Util.currentTimeMillis()
         console.log(this.calibrationState)
 
         this.debug()
@@ -103,6 +105,5 @@ export default class BoardCalibration {
 
         let areaImageData = await window.library.boardArea.getImage()
         window.library.debugCanvas.getContext("2d").putImageData(areaImageData, 0, 0)
-        console.log(areaImageData.width + ", " + areaImageData.height)
     }
 }
