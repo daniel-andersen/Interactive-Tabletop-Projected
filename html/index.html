@@ -17,24 +17,7 @@
         <script src="lib/tensorflow/tfjs.js" type="text/javascript"></script>
         <script src="lib/tensorflow/deeplab.js" type="text/javascript"></script>
 
-        <script src="scripts/util/util.js" type="text/javascript" ></script>
-        <script src="scripts/util/config.js" type="text/javascript" ></script>
-
-        <script src="scripts/workers/worker-util.js" type="text/javascript" ></script>
-        <script src="scripts/workers/async-worker.js" type="text/javascript" ></script>
-        <script src="scripts/workers/async-workers.js" type="text/javascript" ></script>
-
-        <script src="scripts/camera/camera.js" type="text/javascript" ></script>
-
-        <script src="scripts/board-calibration/board-calibration.js" type="text/javascript" ></script>
-
-        <script src="scripts/board-area/board-area.js" type="text/javascript" ></script>
-
-        <script src="scripts/detectors/brick-detector/brick-detector.js" type="text/javascript" ></script>
-
-        <script src="scripts/library.js" type="text/javascript" ></script>
-
-        <script src="scripts/examples/example1.js" type="text/javascript" ></script>
+        <script src="itp.js" type="text/javascript"></script>
 
         <style>
             .fullscreen_black {
@@ -50,18 +33,11 @@
 
     <body class="fullscreen_black">
         <div id="content" class="fullscreen_black">
-            <img id="exampleImage" src="assets/example1/calibration.png" width="1920px" height="1080px" style="position: absolute; left: 0; top: 0; visibility: hidden;"></canvas>
+            <img id="exampleImage" src="assets/example1/calibration.png" width="1920px" height="1080px" style="position: absolute; left: 0; top: 0; visibility: hidden;" />
 
             <video id="cvVideo" autoplay="true" style="position: absolute; left: 0; top: 0; width: 100vh; height: 100vw; visibility: hidden;"></video>
             <canvas id="cvVideoCanvas" width="1920px" height="1080px" style="position: absolute; left: 0; top: 0; visibility: hidden;"></canvas>
             <canvas id="cvDebugCanvas" width="1920px" height="1080px" style="position: absolute; left: 0; top: 0; width: 800px; height: 450px; background: #ff0000;"></canvas>
         </div>
-
-        <script>
-            window.addEventListener("DOMContentLoaded", function() {
-                let example = new Example1()
-                example.run()
-            });
-        </script>
     </body>
 </html>

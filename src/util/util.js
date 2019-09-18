@@ -1,7 +1,7 @@
-class Util {
-    static idOffset = 0
-
+export default class Util {
     static randomId() {
         return new Date().valueOf() + (Util.idOffset++)
     }
 }
+
+Util.idOffset = 0

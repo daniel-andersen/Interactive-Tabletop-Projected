@@ -1,10 +1,17 @@
-class AsyncWorker {
-    constructor(script) {
-        this.script = script
+import * as OpenCvWorker from 'workerize-loader!./opencv-worker.js'
+import Util from '../util/util'
+
+export default class AsyncWorker {
+    constructor(workerClass) {
+        this.workerMap = {
+            "OpenCvWorker": OpenCvWorker
+        }
+
         this.busy = true
         this.isReusable = true
 
-        this.worker = new Worker(script)
+        this.workerClass = workerClass
+        this.worker = this.workerMap[workerClass]()
         this.worker.onmessage = (message) => {
             this.onMessage(message)
         }
@@ -12,8 +19,8 @@ class AsyncWorker {
         this.promises = {}
     }
 
-    isOfType(script) {
-        return this.script === script
+    isOfType(workerClass) {
+        return this.workerClass === workerClass
     }
 
     isAvailable() {
@@ -43,6 +50,10 @@ class AsyncWorker {
     }
 
     onMessage(message) {
+        if (message.data.type !== undefined && message.data.type === "RPC") {
+            return
+        }
+        console.log(message)
         this.busy = false
 
         let resolve = this.promises[message.data.meta.callerId].resolve

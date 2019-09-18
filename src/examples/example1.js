@@ -1,4 +1,6 @@
-class Example1 {
+import Library from '../library'
+
+export default class Example1 {
 
     constructor() {
         this.library = new Library()

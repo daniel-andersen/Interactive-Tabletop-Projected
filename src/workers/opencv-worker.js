@@ -2,15 +2,15 @@ console.log("Initializing new OpenCV worker...")
 
 importScripts("/lib/opencv/opencv.js")
 importScripts("/lib/opencv/utils.js")
-importScripts("/scripts/workers/worker-util.js")
 
-importScripts("/scripts/detectors/brick-detector/brick-detector-worker.js")
-importScripts("/scripts/board-area/board-area-worker.js")
-importScripts("/scripts/board-calibration/board-calibration-worker.js")
+import WorkerUtil from './worker-util.js'
+import BrickDetectorWorker from '../detectors/brick-detector/brick-detector-worker'
+import BoardAreaWorker from '../board-area/board-area-worker'
+import BoardCalibrationWorker from '../board-calibration/board-calibration-worker'
 
 cv['onRuntimeInitialized'] = () => {
     console.log("OpenCV worker initialized!")
-    ready()
+    WorkerUtil.ready()
 }
 
 let classMap = {
@@ -20,11 +20,12 @@ let classMap = {
 }
 
 onmessage = (message) => {
-    fireWhenReady(() => {
-        meta = message.data.meta
+    WorkerUtil.fireWhenReady(() => {
+        let meta = message.data.meta
 
-        aClass = classMap[meta.class]
-        aClassInstance = new aClass()
+        let aClass = classMap[meta.class]
+        let aClassInstance = new aClass()
+
         aClassInstance[meta.function](message)
     })
 }

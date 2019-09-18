@@ -1,4 +1,4 @@
-class Camera {
+export default class Camera {
     constructor() {
         this.videoElement = document.getElementById('cvVideo')
         this.videoCanvasElement = document.getElementById('cvVideoCanvas')

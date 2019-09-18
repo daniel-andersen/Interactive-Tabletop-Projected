@@ -1,4 +1,6 @@
-class BoardAreaWorker {
+import WorkerUtil from '../workers/worker-util.js'
+
+export default class BoardAreaWorker {
     getBoardArea(message) {
         let payload = message.data.payload
         let meta = message.data.meta
@@ -13,7 +15,7 @@ class BoardAreaWorker {
 
         transformedImage.delete()
 
-        postResponseWithImage(meta, outputImageData)
+        WorkerUtil.postResponseWithImage(meta, outputImageData)
     }
 
     perspectiveTransformImage(imageData, calibration) {

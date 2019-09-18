@@ -1,30 +1,30 @@
-class WorkerUtil {
+export default class WorkerUtil {
     static getImageDataFromPayload(payload) {
         return new ImageData(new Uint8ClampedArray(payload.image.buffer), payload.image.width, payload.image.height)
     }
 }
 
 
-readyCallbacks = []
-isReady = false
+WorkerUtil.readyCallbacks = []
+WorkerUtil.isReady = false
 
-fireWhenReady = (callback) => {
-    if (isReady) {
+WorkerUtil.fireWhenReady = (callback) => {
+    if (WorkerUtil.isReady) {
         callback()
     } else {
-        readyCallbacks.push(callback)
+        WorkerUtil.readyCallbacks.push(callback)
     }
 }
 
-ready = () => {
-    isReady = true
-    for (let callback of readyCallbacks) {
+WorkerUtil.ready = () => {
+    WorkerUtil.isReady = true
+    for (let callback of WorkerUtil.readyCallbacks) {
         callback()
     }
-    readyCallbacks = []
+    WorkerUtil.readyCallbacks = []
 }
 
-postResponseWithImage = (meta, imageData, data={}, transferables=[]) => {
+WorkerUtil.postResponseWithImage = (meta, imageData, data={}, transferables=[]) => {
     postMessage({
         meta: meta,
         payload: Object.assign({},
@@ -40,7 +40,7 @@ postResponseWithImage = (meta, imageData, data={}, transferables=[]) => {
     }, transferables.concat([imageData.data.buffer]))
 }
 
-postResponse = (meta, data={}, transferables=[]) => {
+WorkerUtil.postResponse = (meta, data={}, transferables=[]) => {
     postMessage({
         meta: meta,
         payload: data

@@ -1,4 +1,6 @@
-class AsyncWorkers {
+import AsyncWorker from './async-worker'
+
+export default class AsyncWorkers {
     constructor() {
         this.workers = []
         this.maxWorkers = 100
@@ -6,9 +8,9 @@ class AsyncWorkers {
         this.callbackWaitQueue = []
 
         this.workerMap = {
-            "BrickDetector": "scripts/workers/opencv-worker.js",
-            "BoardArea": "scripts/workers/opencv-worker.js",
-            "BoardCalibration": "scripts/workers/opencv-worker.js"
+            "BrickDetector": "OpenCvWorker",
+            "BoardArea": "OpenCvWorker",
+            "BoardCalibration": "OpenCvWorker"
         }
     }
 
@@ -59,13 +61,13 @@ class AsyncWorkers {
     }
 
     getWorker(className) {
-        let script = this.workerMap[className]
+        let workerClass = this.workerMap[className]
 
         return new Promise((resolve, reject) => {
 
             // Fetch first available worker
             for (let worker of this.workers) {
-                if (worker.isOfType(script) && worker.isAvailable()) {
+                if (worker.isOfType(workerClass) && worker.isAvailable()) {
                     worker.occupy()
                     resolve(worker)
                     return
@@ -74,7 +76,7 @@ class AsyncWorkers {
 
             // Add worker
             if (this.canAddWorker()) {
-                let worker = this.addNewWorker(script)
+                let worker = this.addNewWorker(workerClass)
                 worker.occupy()
                 resolve(worker)
                 return

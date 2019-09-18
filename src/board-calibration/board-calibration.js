@@ -1,11 +1,16 @@
-class BoardCalibration {
-    calibrationCallbacks = []
+import Library from '../library'
+import BoardArea from '../board-area/board-area'
 
-    calibrationState = {
-        calibrated: false,
-        calibrating: false,
-        lastCalibrationTime: undefined,
-        calibration: undefined
+export default class BoardCalibration {
+    constructor() {
+        this.calibrationCallbacks = []
+
+        this.calibrationState = {
+            calibrated: false,
+            calibrating: false,
+            lastCalibrationTime: undefined,
+            calibration: undefined
+        }
     }
 
     waitUntilCalibrated() {

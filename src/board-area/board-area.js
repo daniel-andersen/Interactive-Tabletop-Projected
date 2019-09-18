@@ -1,4 +1,6 @@
-class BoardArea {
+import WorkerUtil from '../workers/worker-util.js'
+
+export default class BoardArea {
     async getImage(areaId=BoardArea.Area.FullBoard) {
         let cameraImageData = await window.library.camera.getCameraImage()
         if (areaId === BoardArea.Area.CameraImage) {

@@ -1,4 +1,6 @@
-class BrickDetectorWorker {
+import WorkerUtil from '../../workers/worker-util.js'
+
+export default class BrickDetectorWorker {
     detect(message) {
         let payload = message.data.payload
         let meta = message.data.meta
@@ -15,7 +17,7 @@ class BrickDetectorWorker {
         frame.delete()
         dst.delete()
 
-        postResponse(meta, {
+        WorkerUtil.postResponse(meta, {
             "bricks": []
         })
     }
