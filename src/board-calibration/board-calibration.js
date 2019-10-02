@@ -90,20 +90,9 @@ export default class BoardCalibration {
 
         this.calibrationState.calibration = calibrationResult.calibration
         this.calibrationState.lastCalibrationTime = Util.currentTimeMillis()
-        console.log(this.calibrationState)
-
-        this.debug()
 
         this.hideCalibrationImage().then(() => {
             this.didCalibrate()
         })
-    }
-
-    async debug() {
-        //let cameraImageData = await window.library.camera.getCameraImage()
-        //window.library.debugCanvas.getContext("2d").putImageData(cameraImageData, 0, 0)
-
-        let areaImageData = await window.library.boardArea.getImage()
-        window.library.debugCanvas.getContext("2d").putImageData(areaImageData, 0, 0)
     }
 }

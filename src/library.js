@@ -8,7 +8,7 @@ import BoardCalibration from './board-calibration/board-calibration'
 import BoardArea from './board-area/board-area'
 import BrickDetector from './detectors/brick-detector/brick-detector'
 
-class Library {
+export default class Library {
     init() {
         console.log("Initializing library...")
 
@@ -26,6 +26,14 @@ class Library {
 
         console.log("Library initialized!")
     }
+
+    onDebugImage(imageData) {
+        if (!window.config.debug) {
+            return
+        }
+        this.debugCanvas.getContext("2d").putImageData(imageData, 0, 0)
+        this.debugCanvas.style.visibility = "visible"
+    }
 }
 
 Library.Sizes = {
@@ -38,5 +46,3 @@ Library.Sizes = {
         height: 480
     }
 }
-
-export default Library

@@ -1,4 +1,5 @@
 import * as OpenCvWorker from 'workerize-loader!./opencv-worker.js'
+import WorkerUtil from './worker-util.js'
 import Util from '../util/util'
 
 export default class AsyncWorker {
@@ -50,7 +51,11 @@ export default class AsyncWorker {
     }
 
     onMessage(message) {
-        if (message.data.type !== undefined && message.data.type === "RPC") {
+        if (message.data.type && message.data.type === "RPC") {
+            return
+        }
+        if (message.data.type && message.data.type === "debug") {
+            window.library.onDebugImage(WorkerUtil.getImageDataFromPayload(message.data.payload))
             return
         }
 
