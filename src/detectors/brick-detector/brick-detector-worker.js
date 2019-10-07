@@ -1,21 +1,22 @@
 import WorkerUtil from '../../workers/worker-util.js'
 
-export default class BrickDetectorWorker {
+export default class ShapeDetectorWorker {
     detect(message) {
-        let payload = message.data.payload
-        let meta = message.data.meta
+        const payload = message.data.payload
+        const meta = message.data.meta
 
-        let imageData = new ImageData(new Uint8ClampedArray(payload.image.buffer), payload.image.width, payload.image.height)
+        const imageData = new ImageData(new Uint8ClampedArray(payload.image.buffer), payload.image.width, payload.image.height)
 
-        let frame = cv.matFromImageData(imageData)
+        const sourceImage = cv.matFromImageData(imageData)
 
-        let dst = new cv.Mat()
+        // Grayscale image
+        cv.cvtColor(sourceImage, sourceImage, cv.COLOR_RGB2GRAY, 0)
 
-        cv.cvtColor(frame, frame, cv.COLOR_RGB2GRAY, 0)
-        cv.Canny(frame, dst, 50, 100, 3, false)
+        const cannyImage = new cv.Mat()
+        cv.Canny(sourceImage, cannyImage, 50, 100, 3, false)
 
-        frame.delete()
-        dst.delete()
+        sourceImage.delete()
+        cannyImage.delete()
 
         WorkerUtil.postResponse(meta, {
             "bricks": []

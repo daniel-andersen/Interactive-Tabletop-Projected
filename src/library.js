@@ -7,6 +7,7 @@ import Camera from './camera/camera'
 import BoardCalibration from './board-calibration/board-calibration'
 import BoardArea from './board-area/board-area'
 import BrickDetector from './detectors/brick-detector/brick-detector'
+import ShapeDetector from './detectors/shape-detector/shape-detector'
 
 export default class Library {
     init() {
@@ -21,6 +22,7 @@ export default class Library {
         this.boardCalibration = new BoardCalibration()
         this.boardArea = new BoardArea()
         this.brickDetector = new BrickDetector()
+        this.shapeDetector = new ShapeDetector()
 
         this.debugCanvas = document.getElementById('cvDebugCanvas')
 

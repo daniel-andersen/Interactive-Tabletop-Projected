@@ -61,7 +61,7 @@ export default class AsyncWorker {
 
         this.busy = false
 
-        let resolve = this.promises[message.data.meta.callerId].resolve
+        const resolve = this.promises[message.data.meta.callerId].resolve
         delete this.promises[message.data.meta.callerId]
 
         resolve(message.data.payload)

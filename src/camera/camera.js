@@ -20,7 +20,7 @@ export default class Camera {
     async _getCameraImage(element, srcWidth, srcHeight, dstWidth, dstHeight) {
         return new Promise((resolve, reject) => {
             this.videoCanvasContext.drawImage(element, 0, 0, srcWidth, srcHeight, 0, 0, dstWidth, dstHeight)
-            let imageData = this.videoCanvasContext.getImageData(0, 0, dstWidth, dstHeight)
+            const imageData = this.videoCanvasContext.getImageData(0, 0, dstWidth, dstHeight)
             resolve(imageData)
         })
     }

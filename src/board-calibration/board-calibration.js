@@ -59,10 +59,10 @@ export default class BoardCalibration {
         this.calibrationState.calibrating = false
         this.calibrationState.calibrated = true
 
-        let callbacks = this.calibrationCallbacks
+        const callbacks = this.calibrationCallbacks
         this.calibrationCallbacks = []
 
-        for (let callback of callbacks) {
+        for (const callback of callbacks) {
             callback()
         }
     }
@@ -84,9 +84,9 @@ export default class BoardCalibration {
     }
 
     async performCalibrationStep() {
-        let size = Library.Sizes.p480
-        let imageData = await window.library.boardArea.getImage(BoardArea.Area.CameraImage)
-        let calibrationResult = await window.library.workers.invokeWorkerWithImage("BoardCalibration", "getBoardCalibration", imageData)
+        const size = Library.Sizes.p480
+        const imageData = await window.library.boardArea.getImage(BoardArea.Area.CameraImage)
+        const calibrationResult = await window.library.workers.invokeWorkerWithImage("BoardCalibration", "getBoardCalibration", imageData)
 
         this.calibrationState.calibration = calibrationResult.calibration
         this.calibrationState.lastCalibrationTime = Util.currentTimeMillis()

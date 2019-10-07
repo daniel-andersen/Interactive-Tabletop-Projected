@@ -11,7 +11,7 @@ export default class Example1 {
 
     prepare() {
         return new Promise((resolve, reject) => {
-            let waitUntilReady = () => {
+            const waitUntilReady = () => {
                 if (this.exampleImageElement.complete) {
                     resolve()
                 } else {
@@ -28,26 +28,17 @@ export default class Example1 {
         console.log("Running example...")
 
         await this.prepare()
-
         await this.runTest()
     }
 
     async runTest() {
         this.library.camera.setDebugImage(this.exampleImageElement)
 
-        let imageData = await this.library.camera.getCameraImage(Library.Sizes.p480)
+        await this.library.shapeDetector.createShape("test", "/assets/library/calibration/calibration.png")
 
-        this.library.brickDetector.detect().then((bricks) => {
-            console.log("Detected bricks 1:")
-            console.log(bricks)
-        })
-        this.library.brickDetector.detect().then((bricks) => {
-            console.log("Detected bricks 2:")
-            console.log(bricks)
-        })
-        this.library.brickDetector.detect().then((bricks) => {
-            console.log("Detected bricks 3:")
-            console.log(bricks)
+        await this.library.shapeDetector.detect("test").then((result) => {
+            console.log("Detected shapes:")
+            console.log(result)
         })
     }
 }

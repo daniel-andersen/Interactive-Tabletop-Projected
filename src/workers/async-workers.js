@@ -8,6 +8,7 @@ export default class AsyncWorkers {
         this.callbackWaitQueue = []
 
         this.workerMap = {
+            "ShapeDetector": "OpenCvWorker",
             "BrickDetector": "OpenCvWorker",
             "BoardArea": "OpenCvWorker",
             "BoardCalibration": "OpenCvWorker"
@@ -15,7 +16,7 @@ export default class AsyncWorkers {
     }
 
     async invokeWorkerWithImage(className, functionName, imageData, data={}) {
-        let imageDataArray = new Uint8ClampedArray(imageData.width * imageData.height * 4)
+        const imageDataArray = new Uint8ClampedArray(imageData.width * imageData.height * 4)
         imageDataArray.set(imageData.data)
 
         return this.invokeWorker(
@@ -40,8 +41,8 @@ export default class AsyncWorkers {
     async invokeWorker(meta, data={}, transferables=[]) {
 
         // Find and invoke available worker
-        let worker = await this.getWorker(meta.class)
-        let message = await worker.invoke(meta, data, transferables)
+        const worker = await this.getWorker(meta.class)
+        const message = await worker.invoke(meta, data, transferables)
 
         // Dequeue waiting calls
         this.dequeueCallback(worker)
@@ -56,17 +57,17 @@ export default class AsyncWorkers {
 
         worker.occupy()
 
-        let callback = this.callbackWaitQueue.shift()
+        const callback = this.callbackWaitQueue.shift()
         callback.resolve(worker)
     }
 
     getWorker(className) {
-        let workerClass = this.workerMap[className]
+        const workerClass = this.workerMap[className]
 
         return new Promise((resolve, reject) => {
 
             // Fetch first available worker
-            for (let worker of this.workers) {
+            for (const worker of this.workers) {
                 if (worker.isOfType(workerClass) && worker.isAvailable()) {
                     worker.occupy()
                     resolve(worker)
@@ -76,7 +77,7 @@ export default class AsyncWorkers {
 
             // Add worker
             if (this.canAddWorker()) {
-                let worker = this.addNewWorker(workerClass)
+                const worker = this.addNewWorker(workerClass)
                 worker.occupy()
                 resolve(worker)
                 return
@@ -88,7 +89,7 @@ export default class AsyncWorkers {
     }
 
     addNewWorker(script) {
-        let worker = new AsyncWorker(script)
+        const worker = new AsyncWorker(script)
         this.workers.push(worker)
         return worker
     }

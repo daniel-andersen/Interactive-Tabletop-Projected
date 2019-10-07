@@ -1,3 +1,5 @@
+import OpenCvUtil from './opencv-util'
+
 export default class WorkerUtil {
     static getImageDataFromPayload(payload) {
         return new ImageData(new Uint8ClampedArray(payload.image.buffer), payload.image.width, payload.image.height)
@@ -13,7 +15,7 @@ export default class WorkerUtil {
 
     static ready() {
         WorkerUtil.isReady = true
-        for (let callback of WorkerUtil.readyCallbacks) {
+        for (const callback of WorkerUtil.readyCallbacks) {
             callback()
         }
         WorkerUtil.readyCallbacks = []
@@ -42,7 +44,10 @@ export default class WorkerUtil {
         }, transferables)
     }
 
-    static postDebugImage(meta, imageData, data={}, transferables=[]) {
+    static postDebugImage(meta, image, data={}, transferables=[]) {
+        const colorImage = OpenCvUtil.getColorImage(image)
+        const imageData = new ImageData(new Uint8ClampedArray(colorImage.data), colorImage.cols, colorImage.rows)
+
         postMessage({
             type: "debug",
             meta: meta,
