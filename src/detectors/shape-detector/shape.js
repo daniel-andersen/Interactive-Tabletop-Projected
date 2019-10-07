@@ -1,5 +1,6 @@
 import WorkerUtil from '../../workers/worker-util.js'
 import OpenCvUtil from '../../workers/opencv-util.js'
+import Util from '../../util/util.js'
 
 export default class Shape {
     constructor(options) {
@@ -15,10 +16,11 @@ export default class Shape {
         }
 
         this.simplifiedContour = this.simplifyContour(contour)
-        this.length = cv.arcLength(this.simplifiedContour, true)
+
+        this.shapeArea = cv.contourArea(this.simplifiedContour, false)
+        this.shapeLength = cv.arcLength(this.simplifiedContour, true)
 
         this.computePoints()
-
         this.computeLengths()
         this.computeAngles()
 
@@ -73,7 +75,20 @@ export default class Shape {
     }
 
     computeLengths() {
+        this.lengths = []
 
+        for (let i = 0; i < this.points.length; i++) {
+            const p1 = this.points[i]
+            const p2 = this.points[(i + 1) % this.points.length]
+            const length = Util.pointsDistance(p1, p2)
+
+            this.lengths.push({
+                length: length,
+                lengthPct: length / this.shapeLength
+            })
+        }
+
+        console.log(this.lengths)
     }
 
     computeAngles() {
@@ -83,5 +98,8 @@ export default class Shape {
     delete() {
         this.sourceImage.delete()
         this.sourceImage = undefined
+
+        this.simplifiedContour.delete()
+        this.simplifiedContour = undefined
     }
 }

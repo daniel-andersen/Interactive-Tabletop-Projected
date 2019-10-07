@@ -19,6 +19,10 @@ export default class Util {
         return new Date().getTime()
     }
 
+    static pointsDistance(p1, p2) {
+        return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y))
+    }
+
     static async loadImage(imageUrl) {
         return new Promise((resolve, reject) => {
             const image = new Image()
