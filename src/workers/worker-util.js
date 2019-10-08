@@ -21,27 +21,40 @@ export default class WorkerUtil {
         WorkerUtil.readyCallbacks = []
     }
 
-    static postResponseWithImage(meta, imageData, data={}, transferables=[]) {
-        postMessage({
-            meta: meta,
-            payload: Object.assign({},
-                data,
-                {
-                    "image": {
-                        "width": imageData.width,
-                        "height": imageData.height,
-                        "buffer": imageData.data.buffer
+    static handleResponseWithImage(meta, imageData, data={}, transferables=[]) {
+        if (!meta.functionCall) {
+            postMessage({
+                meta: meta,
+                payload: Object.assign({},
+                    data,
+                    {
+                        "image": {
+                            "width": imageData.width,
+                            "height": imageData.height,
+                            "buffer": imageData.data.buffer
+                        }
                     }
-                }
-            )
-        }, transferables.concat([imageData.data.buffer]))
+                )
+            }, transferables.concat([imageData.data.buffer]))
+        }
+
+        return Object.assign({},
+            data,
+            {
+                image: imageData
+            }
+        )
     }
 
-    static postResponse(meta, data={}, transferables=[]) {
-        postMessage({
-            meta: meta,
-            payload: data
-        }, transferables)
+    static handleResponse(meta, data={}, transferables=[]) {
+        if (!meta.functionCall) {
+            postMessage({
+                meta: meta,
+                payload: data
+            }, transferables)
+        }
+
+        return data
     }
 
     static postDebugImage(meta, image, data={}, transferables=[]) {

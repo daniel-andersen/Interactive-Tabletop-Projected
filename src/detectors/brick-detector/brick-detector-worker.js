@@ -18,7 +18,7 @@ export default class ShapeDetectorWorker {
         sourceImage.delete()
         cannyImage.delete()
 
-        WorkerUtil.postResponse(meta, {
+        return WorkerUtil.handleResponse(meta, {
             "bricks": []
         })
     }

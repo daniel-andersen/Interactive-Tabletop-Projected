@@ -1,3 +1,4 @@
+import ShapeDetectorWorker from '../detectors/shape-detector/shape-detector-worker.js'
 import WorkerUtil from '../workers/worker-util.js'
 
 export default class BoardCalibrationWorker {
@@ -5,15 +6,33 @@ export default class BoardCalibrationWorker {
         const payload = message.data.payload
         const meta = message.data.meta
 
-        const imageData = new ImageData(new Uint8ClampedArray(payload.image.buffer), payload.image.width, payload.image.height)
+        // Detect shape
+        const detectionResult = new ShapeDetectorWorker().detect({
+            data: {
+                meta: Object.assign({}, meta, {functionCall: true}),
+                payload: {
+                    image: payload.image,
+                    shape: payload.shape
+                }
+            }
+        })
+        if (detectionResult.foundShapes.length !== 1) {
+            return WorkerUtil.handleResponse(meta, {
+                success: false
+            })
+        }
 
-        const homography = this.findHomography(imageData)
+        const shape = detectionResult.foundShapes[0]
+
+        // Find perspective transform
+        const homography = this.findHomography(detectionResult.sourceShape.points, shape.points)
         const corners = this.findCorners(homography)
         const perspectiveTransform = this.findPerspectiveTransform(corners)
 
         homography.delete()
 
-        WorkerUtil.postResponse(meta, {
+        return WorkerUtil.handleResponse(meta, {
+            success: true,
             calibration: {
                 corners: corners,
                 perspectiveTransform: perspectiveTransform
@@ -21,15 +40,28 @@ export default class BoardCalibrationWorker {
         })
     }
 
-    findHomography(imageData) {
-        const foundPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [595, 318,   882, 166,   1109, 322,   1099, 451,   1386, 557,   595, 487,   865, 446,   960, 315,   886, 219])
-        //const foundPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [583, 389,   872, 181,   1113, 393,   1088, 543,   1336, 647,   619, 579,   868, 538,   960, 387,   878, 260])
-        const calibrationPoints = cv.matFromArray(9, 1, cv.CV_32FC2, [264, 250,   553,  41,    793, 253,    770, 403,   1016, 508,   301, 440,   549, 398,   641, 246,   559, 119])
+    findHomography(calibrationPoints, foundPoints) {
 
-        const homography = cv.findHomography(calibrationPoints, foundPoints)
+        // Convert calibration points to mat
+        const flatCalibrationPoints = []
+        for (let i = 0; i < calibrationPoints.length; i++) {
+            flatCalibrationPoints.push(calibrationPoints[i].x)
+            flatCalibrationPoints.push(calibrationPoints[i].y)
+        }
+        const calibrationPointsMat = cv.matFromArray(9, 1, cv.CV_32FC2, flatCalibrationPoints)
 
-        foundPoints.delete()
-        calibrationPoints.delete()
+        // Convert found points to mat
+        const flatFoundPoints = []
+        for (let i = 0; i < foundPoints.length; i++) {
+            flatFoundPoints.push(foundPoints[i].x)
+            flatFoundPoints.push(foundPoints[i].y)
+        }
+        const foundPointsMat = cv.matFromArray(9, 1, cv.CV_32FC2, flatFoundPoints)
+
+        const homography = cv.findHomography(calibrationPointsMat, foundPointsMat)
+
+        foundPointsMat.delete()
+        calibrationPointsMat.delete()
 
         return homography
     }

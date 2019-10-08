@@ -23,6 +23,19 @@ export default class Util {
         return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y))
     }
 
+    static pointsAngle(p1, p2, p3) {
+        const v1 = {x: p1.x - p2.x, y: p1.y - p2.y}
+        const v2 = {x: p3.x - p2.x, y: p3.y - p2.y}
+
+        const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x)
+
+        return angle % (Math.PI * 2.0)
+    }
+
+    static angleDifference(angle1, angle2) {
+        return Math.atan2(Math.sin(angle1 - angle2), Math.cos(angle1 - angle2))
+    }
+
     static async loadImage(imageUrl) {
         return new Promise((resolve, reject) => {
             const image = new Image()
@@ -32,7 +45,7 @@ export default class Util {
         })
     }
 
-    static getImageData(image) {
+    static async getImageData(image) {
         return new Promise((resolve, reject) => {
             const canvas = document.createElement('canvas')
             canvas.width = image.width

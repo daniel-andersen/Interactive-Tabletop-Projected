@@ -1,10 +1,10 @@
 import Library from '../library'
+import BoardArea from '../board-area/board-area'
 
 export default class Example1 {
 
     constructor() {
-        this.library = new Library()
-        this.library.init()
+        new Library().init()
 
         this.exampleImageElement = document.getElementById('exampleImage')
     }
@@ -32,13 +32,8 @@ export default class Example1 {
     }
 
     async runTest() {
-        this.library.camera.setDebugImage(this.exampleImageElement)
+        window.library.camera.setDebugImage(this.exampleImageElement)
 
-        await this.library.shapeDetector.createShape("test", "/assets/library/calibration/calibration.png")
-
-        await this.library.shapeDetector.detect("test").then((result) => {
-            console.log("Detected shapes:")
-            console.log(result)
-        })
+        await window.library.boardArea.getImage(BoardArea.Area.FullBoard)
     }
 }

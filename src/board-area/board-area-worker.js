@@ -17,7 +17,7 @@ export default class BoardAreaWorker {
 
         transformedImage.delete()
 
-        WorkerUtil.postResponseWithImage(meta, outputImageData)
+        return WorkerUtil.handleResponseWithImage(meta, outputImageData)
     }
 
     perspectiveTransformImage(imageData, calibration) {

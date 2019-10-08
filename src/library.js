@@ -33,6 +33,7 @@ export default class Library {
         if (!window.config.debug) {
             return
         }
+        this.debugCanvas.getContext("2d").clearRect(0, 0, this.debugCanvas.width, this.debugCanvas.height)
         this.debugCanvas.getContext("2d").putImageData(imageData, 0, 0)
         this.debugCanvas.style.visibility = "visible"
     }

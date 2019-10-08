@@ -17,7 +17,7 @@ export default class ShapeDetectorWorker {
 
         inputImage.delete()
 
-        WorkerUtil.postResponse(meta, {
+        return WorkerUtil.handleResponse(meta, {
             "shape": {
                 id: shape.id
             }
@@ -35,9 +35,27 @@ export default class ShapeDetectorWorker {
         const [contours, hierarchy] = this.getContours(imageData)
 
         // Detect shapes
+        const shapes = []
+
         for (let i = 0; i < contours.size(); i++) {
             const contour = contours.get(i)
-            const otherShape = new Shape({contour: contour})
+            const otherShape = new Shape({id: shape.id, contour: contour})
+
+            const result = shape.compare(otherShape)
+
+            if (result.match) {
+                shapes.push(result.shape)
+
+                const tmpImage = cv.matFromImageData(imageData)
+                const cts = new cv.MatVector()
+                cts.push_back(otherShape.simplifiedContour)
+                cv.drawContours(tmpImage, cts, 0, new cv.Scalar(255, 0, 255, 255), 2)
+                WorkerUtil.postDebugImage(meta, tmpImage)
+                cts.delete()
+                tmpImage.delete()
+            }
+
+            otherShape.delete()
         }
 
         //WorkerUtil.postDebugImage(meta, thresholdedImage)
@@ -46,8 +64,12 @@ export default class ShapeDetectorWorker {
         contours.delete()
         hierarchy.delete()
 
-        WorkerUtil.postResponse(meta, {
-            "shapes": []
+        return WorkerUtil.handleResponse(meta, {
+            "sourceShape": {
+                id: shape.id,
+                points: shape.points
+            },
+            "foundShapes": shapes
         })
     }
 
