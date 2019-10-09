@@ -26,6 +26,8 @@ export default class Library {
 
         this.debugCanvas = document.getElementById('cvDebugCanvas')
 
+        this.camera.init()
+        
         console.log("Library initialized!")
     }
 

@@ -24,4 +24,67 @@ export default class Camera {
             resolve(imageData)
         })
     }
+
+    async getVideoStream(constraints) {
+        if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
+            return window.navigator.mediaDevices.getUserMedia(constraints)
+        } else {
+            const getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia || window.navigator.msGetUserMedia
+            if (getUserMedia) {
+                return new Promise((resolve, reject) => {
+                    getUserMedia(constraints, (stream) => {
+                        resolve(stream)
+                    }, () => {
+                        reject("Error getting legacy video stream")
+                    })
+                })
+            } else {
+                return new Promise((resolve, reject) => {
+                    reject('No user media available')
+                })
+            }
+        }
+    }
+
+    async init() {
+        const constraints = {
+            audio: false,
+            video: {
+                width: { exact: 640 },
+                height: { exact: 480 }
+                //width: { exact: 1920 },
+                //height: { exact: 1080 }
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            this.getVideoStream(constraints).then((stream) => {
+                this.videoElement.srcObject = stream
+                this.videoElement.addEventListener('loadeddata', () => {
+                    var attempts = 10
+                    const checkVideo = () => {
+                        if (attempts > 0) {
+                            if (this.videoElement.videoWidth > 0 && this.videoElement.videoHeight > 0) {
+                                console.log('Video size: ' + this.videoElement.videoWidth + 'x' + this.videoElement.videoHeight)
+                                this.inputSourceSize = {
+                                    width: this.videoElement.videoWidth,
+                                    height: this.videoElement.videoHeight
+                                }
+                                this.videoElement.play()
+                                resolve()
+                            } else {
+                                setTimeout(checkVideo, 100)
+                            }
+                        } else {
+                            reject('Unable to play video stream')
+                        }
+                        attempts--
+                    }
+                    checkVideo()
+                }, false)
+            }).catch((e) => {
+                reject(e)
+            })
+        })
+    }
 }
