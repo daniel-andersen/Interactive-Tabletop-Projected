@@ -13,7 +13,7 @@ cd ~/installation
 yarn build
 
 # Start client server
-cd ~/installation/build
+cd ~/installation/dist
 python3 -m http.server 9000 &
 
 up=0
