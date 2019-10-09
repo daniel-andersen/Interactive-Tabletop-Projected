@@ -1,23 +1,20 @@
 #!/bin/bash
 
 pkill -ef "chrome"
-pkill -ef "gulp"
+pkill -ef "yarn"
 pkill -ef "http.server"
 
-# Roll logs
-mkdir ~/log
+# Set correct display mode
+#xrandr --output DP-1 --rotate normal
+#xrandr -s 1280x800
 
-cp ~/log/client.log.2 ~/log/client.log.3
-cp ~/log/client.log.1 ~/log/client.log.2
-cp ~/log/client.log ~/log/client.log.1
-
-# Build project
+# Start client
 cd ~/installation
-/usr/local/bin/gulp build
+yarn build
 
-# Start web server
+# Start client server
 cd ~/installation/build
-python3 -m http.server 9000 > ~/log/client.log 2>&1 &
+python3 -m http.server 9000 &
 
 up=0
 while [ $up -eq 0 ]
@@ -29,10 +26,11 @@ done
 
 # Start browser
 rm -rf ~/.cache/google-chrome/Default
-/opt/google/chrome/chrome --disable-features=InfiniteSessionRestore --password-store=basic --ignore-urlfetcher-cert-requests --noerrdialogs --disable-infobars --disable-session-crashed-bubble --kiosk http://localhost:9000/index.html & browser_pid=$!
+
+/opt/google/chrome/chrome --disable-features=InfiniteSessionRestore --password-store=basic --ignore-urlfetcher-cert-requests --no-default-browser-check --no-first-run --noerrdialogs --disable-infobars --disable-session-crashed-bubble --kiosk --app=http://localhost:9000/index.html & browser_pid=$!
 
 # Hide mouse cursor when inactive
-sleep 10
+sleep 3
 unclutter -idle 1 &
 
 # Activate browser window
