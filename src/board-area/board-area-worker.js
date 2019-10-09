@@ -13,7 +13,7 @@ export default class BoardAreaWorker {
 
         const outputImageData = new ImageData(new Uint8ClampedArray(transformedImage.data), transformedImage.cols, transformedImage.rows)
 
-        WorkerUtil.postDebugImage(meta, transformedImage)
+        //WorkerUtil.postDebugImage(meta, transformedImage)
 
         transformedImage.delete()
 
