@@ -50,10 +50,10 @@ export default class Camera {
         const constraints = {
             audio: false,
             video: {
-                width: { exact: 640 },
-                height: { exact: 480 }
-                //width: { exact: 1920 },
-                //height: { exact: 1080 }
+                //width: { exact: 640 },
+                //height: { exact: 480 }
+                width: { exact: 1920 },
+                height: { exact: 1080 }
             }
         }
 
@@ -66,10 +66,14 @@ export default class Camera {
                         if (attempts > 0) {
                             if (this.videoElement.videoWidth > 0 && this.videoElement.videoHeight > 0) {
                                 console.log('Video size: ' + this.videoElement.videoWidth + 'x' + this.videoElement.videoHeight)
+
                                 this.inputSourceSize = {
                                     width: this.videoElement.videoWidth,
                                     height: this.videoElement.videoHeight
                                 }
+                                this.videoCanvasElement.width = this.inputSourceSize.width
+                                this.videoCanvasElement.height = this.inputSourceSize.height
+
                                 this.videoElement.play()
                                 resolve()
                             } else {

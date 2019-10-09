@@ -129,7 +129,6 @@ export default class BoardCalibration {
     }
 
     async performCalibrationStep() {
-        const size = Library.Sizes.p480
         const imageData = await window.library.camera.getCameraImage()
         const calibrationResult = await window.library.workers.invokeWorkerWithImage("BoardCalibration", "getBoardCalibration", imageData, {
             shape: {
