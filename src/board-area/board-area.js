@@ -17,10 +17,6 @@ export default class BoardArea {
             calibration: window.library.boardCalibration.calibrationState.calibration
         })
 
-        window.library.debugCanvas.getContext("2d").clearRect(0, 0, window.library.debugCanvas.width, window.library.debugCanvas.height)
-        window.library.debugCanvas.getContext("2d").putImageData(imageData, 0, 0)
-        window.library.debugCanvas.style.visibility = "visible"
-
         return WorkerUtil.getImageDataFromPayload(payload)
     }
 }

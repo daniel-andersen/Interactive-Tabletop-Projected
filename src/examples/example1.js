@@ -32,8 +32,14 @@ export default class Example1 {
     }
 
     async runTest() {
-        window.library.camera.setDebugImage(this.exampleImageElement)
+        //window.library.camera.setDebugImage(this.exampleImageElement)
 
-        await window.library.boardArea.getImage(BoardArea.Area.FullBoard)
+        setTimeout(() => {
+            const imageData = await window.library.boardArea.getImage(BoardArea.Area.CameraImage)
+
+            window.library.debugCanvas.getContext("2d").clearRect(0, 0, window.library.debugCanvas.width, window.library.debugCanvas.height)
+            window.library.debugCanvas.getContext("2d").putImageData(imageData, 0, 0)
+            window.library.debugCanvas.style.visibility = "visible"
+        }, 1000)
     }
 }
