@@ -2,14 +2,14 @@ import WorkerUtil from '../workers/worker-util.js'
 
 export default class BoardArea {
     async getImage(areaId=BoardArea.Area.FullBoard) {
-        const cameraImageData = await window.library.camera.getCameraImage()
+        const imageData = await window.library.camera.getCameraImage()
         if (areaId === BoardArea.Area.CameraImage) {
-            return cameraImageData
+            return imageData
         }
 
         await window.library.boardCalibration.waitUntilCalibrated()
 
-        const payload = await window.library.workers.invokeWorkerWithImage("BoardArea", "getBoardArea", cameraImageData, {
+        const payload = await window.library.workers.invokeWorkerWithImage("BoardArea", "getBoardArea", imageData, {
             area: { // TODO!
                 topLeftCorner: { x: 0.0, y: 0.0 },
                 bottomRightCorner: { x: 1.0, y: 1.0 }
